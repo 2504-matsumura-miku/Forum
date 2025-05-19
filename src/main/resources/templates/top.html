@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:form="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <link th:href="@{/css/style.css}" rel="styleSheet">
+    <title>TOP</title>
+</head>
+<body>
+<div class="header-contents">
+    <h1>匿名掲示板</h1>
+</div>
+<div class="main-contents">
+    <a href="/new">
+        <button class="new-button" type="button">新規投稿</button>
+    </a>
+    <div class="message-icon" th:each="content : ${contents}">
+        <div>
+            ID : <span th:text="${content.id}"/>
+        </div>
+        <div class="text">
+            投稿 : <span th:text="${content.content}"/>
+        </div>
+        <div class="delete-button">
+            <!--/delete というURLに対して、POSTメソッドでリクエストを送る
+            この場合は画面表示ではなく、削除処理を行うためだけのURL!-->
+            <form th:action="@{/delete}" method="post">
+                <input type="hidden" name="deleteId" th:value="${content.id}" />
+                <input type="submit" value="削除" />
+            </form>
+        </div>
+        <div class="edit-button">
+            <form th:action="@{/edit}" method="get">
+                <input type="hidden" name="editId" th:value="${content.id}" />
+                <input type="submit" value="編集" />
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
