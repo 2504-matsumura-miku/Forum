@@ -106,11 +106,11 @@ public class ReportService {
             // 現在日を文字列に変換
             //    end = simpleDateFormat.format(nowDate);
         } else {
-            String end2 = "2020-01-01 00:00:00";
-            //end += " 23:59:59";
+            //String end2 = "2020-01-01 00:00:00";
+            end += " 23:59:59";
             try {
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                Date endDate = simpleDateFormat.parse(end2);
+                endData = simpleDateFormat.parse(end);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }

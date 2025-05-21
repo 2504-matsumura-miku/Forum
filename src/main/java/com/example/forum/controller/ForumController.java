@@ -155,7 +155,7 @@ public class ForumController {
     /*
      * 絞り込み処理
      */
-    @GetMapping("/calendar")
+    @PostMapping("/calendar")
     public ModelAndView calendar(@RequestParam("start") String start,
                                  @RequestParam("end") String end) {
 
