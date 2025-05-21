@@ -130,3 +130,27 @@ label {
 	margin-left: 10px;
 	color: red;
 }
+
+.button-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.reply-box {
+    width: 100%;
+    resize: none;
+}
+
+.comment-button {
+    margin-top: 10px;
+}
+
+.comment-area {
+    margin-left: 1em;
+}
+
+.comment-line {
+    margin-left: 1em;
+}
+

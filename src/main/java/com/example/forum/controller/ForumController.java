@@ -23,7 +23,7 @@ public class ForumController {
     /*
      * 投稿・コメント内容表示処理
      */
-    @GetMapping //トップページ表示のためURLなし
+    @GetMapping("/") //トップページ表示のためURLなし
     public ModelAndView top() {
         ModelAndView mav = new ModelAndView();
         // 投稿を全件取得
@@ -129,7 +129,7 @@ public class ForumController {
     }
 
     /*
-     * 投稿編集処理
+     * コメント編集処理
      */
     @PostMapping("/updateCom")
     public ModelAndView updateComment(@ModelAttribute("formModel") CommentForm commentForm) {
@@ -139,5 +139,14 @@ public class ForumController {
         return new ModelAndView("redirect:/");
     }
 
-
+    /*
+     * コメント削除処理
+     */
+    @PostMapping("/comDelete")
+    public String deleteComment(@RequestParam("deleteComId") Integer id) {
+        // 削除するコメントのIDを渡す
+        commentService.deleteComment(id);
+        // 一覧ページへリダイレクト
+        return "redirect:/";
+    }
 }

@@ -74,13 +74,11 @@ public class CommentService {
         return Comments.get(0);
     }
 
-//    /*
-//     * レコード削除
-//     */
-//    public void deleteComment(Integer id) {
-//        // CommentRepositoryにはCRUD操作の為の基本的なメソッドが備わっており、
-//        // 今回はその中のうち、キーに該当するレコードを削除する「deleteById()」を使用する。
-//        CommentRepository.deleteById(id);
-//    }
-//
+    /*
+     * レコード削除
+     */
+    public void deleteComment(Integer id) {
+            commentRepository.deleteById(id);
+    }
+
 }

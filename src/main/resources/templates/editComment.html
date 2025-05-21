@@ -13,9 +13,10 @@
   <form method="post" th:action="@{/updateCom}" th:object="${formModel}">
     <div class="form-area">
       <label>コメント内容</label>
-      <textarea class="tweet-box" th:field="*{comment}" size="20" maxlength="200" /></textarea><br/>
-      <!-- 更新対象の投稿IDを保持 -->
+      <textarea class="tweet-box" th:field="*{text}" size="20" maxlength="200" /></textarea><br/>
       <input type="hidden" th:field="*{id}" />
+      <!-- 更新対象のコメントIDを保持 -->
+      <input type="hidden" th:field="*{message_id}" />
       <input type="submit" value="更新" />
     </div>
   </form>
