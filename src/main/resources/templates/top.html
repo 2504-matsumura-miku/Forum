@@ -13,6 +13,15 @@
     <a href="/new">
         <button class="new-button" type="button">新規投稿</button>
     </a>
+    <div class="calendar">
+        <form th:action="@{/calendar}" method="post">
+            日付：
+            <input type="date" name="start" type="hidden" value="${start}" />
+            ～
+            <input type="date" name="end" type="hidden" value="${end}" />
+            <input type="submit" value="絞り込み">
+        </form>
+    </div><br />
     <div class="message-icon" th:each="content : ${contents}">
         <div>
             ID : <span th:text="${content.id}"/>
@@ -31,14 +40,14 @@
                 <input type="hidden" name="editId" th:value="${content.id}" />
                 <input type="submit" value="編集" />
             </form>
-            <form th:action="@{/comAdd}" method="post">
-                <input type="submit" value="返信" />
-            </form>
         </div><p>
         <div class="comment-area">
             <form th:action="@{/comAdd}" method="post">
+                <!-- CommentForm.setText()に対応 -->
                 <textarea class="tweet-box" name="text" maxlength="150"></textarea><br/>
+                <!-- CommentForm.setMessage_id() に対応 -->
                 <input type="hidden" name="message_id" th:value="${content.id}" />
+                <input type="submit" value="返信" />
             </form>
         </div><p>
         <div class="comment-line" th:each="comment : ${comments}">

@@ -1,13 +1,19 @@
 package com.example.forum.service;
 
+import com.example.forum.controller.form.CommentForm;
 import com.example.forum.controller.form.ReportForm;
 import com.example.forum.repository.ReportRepository;
 import com.example.forum.repository.entity.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static io.micrometer.common.util.StringUtils.isBlank;
 
 @Service
 public class ReportService {
@@ -76,5 +82,41 @@ public class ReportService {
         results.add((Report) reportRepository.findById(id).orElse(null));
         List<ReportForm> reports = setReportForm(results);
         return reports.get(0);
+    }
+
+    /*
+     * 開始日と終了日の取得
+     */
+    public List<ReportForm> findByDate(String start, String end) {
+        // 開始日が未入力の場合、デフォルト値
+        Date startData;
+        if (isBlank(start)) {
+            startData = new Date();
+            //start = "2020-01-01 00:00:00";
+        } else {
+//            start += " 00:00:00";
+            startData = new Date();
+        }
+
+        // 終了日が未入力の場合、現在日時
+        Date endData = null;
+        if (isBlank(end)) {
+            endData = new Date();
+            //    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            // 現在日を文字列に変換
+            //    end = simpleDateFormat.format(nowDate);
+        } else {
+            String end2 = "2020-01-01 00:00:00";
+            //end += " 23:59:59";
+            try {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+                Date endDate = simpleDateFormat.parse(end2);
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        List<Report> results = reportRepository.findByCreatedDateBetween(startData, endData);
+        return setReportForm(results);
     }
 }

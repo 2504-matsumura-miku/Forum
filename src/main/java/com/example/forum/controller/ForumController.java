@@ -23,7 +23,7 @@ public class ForumController {
     /*
      * 投稿・コメント内容表示処理
      */
-    @GetMapping("/") //トップページ表示のためURLなし
+    @GetMapping() //トップページ表示のためURLなし
     public ModelAndView top() {
         ModelAndView mav = new ModelAndView();
         // 投稿を全件取得
@@ -35,7 +35,7 @@ public class ForumController {
         // 投稿データオブジェクトを保管
         mav.addObject("contents", contentData);
         mav.addObject("comments", commentData);
-        mav.addObject("commentForm", new CommentForm());
+        // mav.addObject("commentForm", new CommentForm());
         return mav;
     }
 
@@ -69,6 +69,7 @@ public class ForumController {
      * 投稿削除処理
      */
     @PostMapping("/delete")
+    //  HTTPリクエストのパラメータをJavaメソッドの引数として受け取る
     public String deleteContent(@RequestParam("deleteId") Integer id) {
         // 削除する投稿のIDを渡す
         reportService.deleteReport(id);
@@ -106,6 +107,7 @@ public class ForumController {
      * コメント投稿処理
      */
     @PostMapping("/comAdd")
+    // リクエストのデータが複数(textとmessage_id)あり、それらを1つのFormオブジェクトで扱うので@ModelAttribute
     public ModelAndView addComment(@ModelAttribute("formModel") CommentForm commentForm) {
         // 投稿をテーブルに格納
         commentService.saveComment(commentForm);
@@ -142,11 +144,30 @@ public class ForumController {
     /*
      * コメント削除処理
      */
-    @PostMapping("/comDelete")
+    @PostMapping("/comDelete") // HTTPのPOSTリクエストを処理するメソッド を定義
     public String deleteComment(@RequestParam("deleteComId") Integer id) {
         // 削除するコメントのIDを渡す
         commentService.deleteComment(id);
         // 一覧ページへリダイレクト
         return "redirect:/";
+    }
+
+    /*
+     * 絞り込み処理
+     */
+    @GetMapping("/calendar")
+    public ModelAndView calendar(@RequestParam("start") String start,
+                                 @RequestParam("end") String end) {
+
+        ModelAndView mav = new ModelAndView();
+        List<ReportForm> contentData = reportService.findByDate(start, end);
+        List<CommentForm> commentData = commentService.findAllReport();
+
+        mav.setViewName("/top");
+        mav.addObject("contents", contentData);
+        mav.addObject("comments", commentData);
+        mav.addObject("start", start);
+        mav.addObject("end", end);
+        return mav;
     }
 }
