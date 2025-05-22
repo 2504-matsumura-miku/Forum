@@ -2,8 +2,7 @@ package com.example.forum.controller.form;
 
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Getter
@@ -11,7 +10,8 @@ import java.util.Date;
 public class ReportForm {
 
     private int id;
-    private String content;
+    @NotBlank
+    public String content;
     private Date created_date;
     private Date updated_date;
 
