@@ -12,7 +12,7 @@ public class ReportForm {
 
     private int id;
     private String content;
-    private LocalDateTime created_date;
-    private LocalDateTime updated_date;
+    private Date created_date;
+    private Date updated_date;
 
 }

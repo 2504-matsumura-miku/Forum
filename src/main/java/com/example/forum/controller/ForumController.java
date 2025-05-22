@@ -19,7 +19,6 @@ public class ForumController {
     @Autowired
     CommentService commentService;
 
-
     /*
      * 投稿・コメント内容表示処理
      */

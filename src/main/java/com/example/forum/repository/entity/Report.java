@@ -1,16 +1,11 @@
 package com.example.forum.repository.entity;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -26,9 +21,11 @@ public class Report {
     @Column
     private String content;
 
-    @Column(name = "created_date")
+    @CreationTimestamp // レコード作成時に自動で現在時刻を設定
+    @Column(name = "created_date",updatable = false)
     private Date createdDate;
 
+    @UpdateTimestamp // レコード更新時に自動で現在時刻を設定
     @Column(name = "updated_date")
     private Date updatedDate;
 

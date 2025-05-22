@@ -2,17 +2,22 @@ package com.example.forum.service;
 
 import com.example.forum.controller.form.CommentForm;
 import com.example.forum.repository.CommentRepository;
+import com.example.forum.repository.ReportRepository;
 import com.example.forum.repository.entity.Comment;
+import com.example.forum.repository.entity.Report;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class CommentService {
     @Autowired
     CommentRepository commentRepository;
+    @Autowired // Springがnew()してくれる
+    ReportRepository reportRepository;
 
     /*
      * レコード全件取得処理
@@ -51,6 +56,11 @@ public class CommentService {
         // id が既に存在するかどうかを DB から確認して、
         // id存在していればupdate、なければinsertが実行
         commentRepository.save(saveComment);
+
+        // コメントの送信に伴い、投稿の更新日時を現在日時で更新
+        Report report = reportRepository.findById(reqComment.getMessage_id()).orElse(null);
+            report.setUpdatedDate(new Date());
+            reportRepository.save(report);
     }
 
     /*
@@ -61,8 +71,6 @@ public class CommentService {
         Comment.setId(reqComment.getId());
         Comment.setText(reqComment.getText());
         Comment.setMessage_id(reqComment.getMessage_id());
-//        Comment.setCreated_date(reqComment.getCreated_date());
-//        Comment.setUpdated_date(reqComment.getUpdated_date());
 
         return Comment;
     }

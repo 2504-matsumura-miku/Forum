@@ -24,7 +24,7 @@ public class ReportService {
      * レコード全件取得処理
      */
     public List<ReportForm> findAllReport() {
-        List<Report> results = reportRepository.findAllByOrderByIdDesc();
+        List<Report> results = reportRepository.findAllByOrderByUpdatedDateDesc();
         List<ReportForm> reports = setReportForm(results);
         return reports;
     }
@@ -40,6 +40,7 @@ public class ReportService {
             Report result = results.get(i);
             report.setId(result.getId());
             report.setContent(result.getContent());
+            report.setCreated_date(result.getCreatedDate());
             reports.add(report);
         }
         return reports;
@@ -62,6 +63,8 @@ public class ReportService {
         Report report = new Report();
         report.setId(reqReport.getId());
         report.setContent(reqReport.getContent());
+        report.setCreatedDate(reqReport.getCreated_date());
+        report.setUpdatedDate(reqReport.getUpdated_date());
         return report;
     }
 
@@ -88,35 +91,41 @@ public class ReportService {
      * 開始日と終了日の取得
      */
     public List<ReportForm> findByDate(String start, String end) {
+        Date startDate;
+        Date endDate;
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
         // 開始日が未入力の場合、デフォルト値
-        Date startData;
         if (isBlank(start)) {
-            startData = new Date();
-            //start = "2020-01-01 00:00:00";
+            try {
+                startDate = simpleDateFormat.parse("2020-01-01 00:00:00");
+            }  catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         } else {
-//            start += " 00:00:00";
-            startData = new Date();
+            start += " 00:00:00";
+            try {
+                startDate = simpleDateFormat.parse(start);
+            }  catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         // 終了日が未入力の場合、現在日時
-        Date endData = null;
         if (isBlank(end)) {
-            endData = new Date();
-            //    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            // 現在日を文字列に変換
-            //    end = simpleDateFormat.format(nowDate);
+            endDate = new Date();
         } else {
-            //String end2 = "2020-01-01 00:00:00";
             end += " 23:59:59";
             try {
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-                endData = simpleDateFormat.parse(end);
+                // String型のendを"yyyy-MM-dd HH:mm:ss"の形式にしたDate型に変換
+                endDate = simpleDateFormat.parse(end);
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }
         }
 
-        List<Report> results = reportRepository.findByCreatedDateBetween(startData, endData);
+        List<Report> results = reportRepository.findByCreatedDateBetween(startDate, endDate);
         return setReportForm(results);
     }
 }

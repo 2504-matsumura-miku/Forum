@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -32,11 +33,11 @@ public class Comment {
     @Column
     private int message_id;
 
-    @Column(insertable = false)
     @CreatedDate
+    @Column(insertable = false)
     private LocalDateTime created_date;
 
+    @UpdateTimestamp
     @Column(insertable = false)
-    @LastModifiedDate
     private LocalDateTime updated_date;
 }
