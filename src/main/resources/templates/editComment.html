@@ -11,6 +11,10 @@
 </div>
 <div class="main-contents">
   <form method="post" th:action="@{/updateCom}" th:object="${formModel}">
+    <!-- 未入力チェック -->
+    <div class="errorMessage">
+      <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
+    </div>
     <div class="form-area">
       <label>コメント内容</label>
       <textarea class="tweet-box" th:field="*{text}" size="20" maxlength="200" /></textarea><br/>

@@ -158,7 +158,13 @@ public class ForumController {
      * コメント編集処理
      */
     @PostMapping("/updateCom")
-    public ModelAndView updateComment(@ModelAttribute("formModel") CommentForm commentForm) {
+    public ModelAndView updateComment(@Validated @ModelAttribute("formModel") CommentForm commentForm,
+                                      BindingResult result) {
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("/editComment");
+            mav.addObject("formModel", commentForm);
+            return mav;
+        }
         // 編集したコメントを更新
         commentService.saveComment(commentForm);
         // トップ画面へリダイレクト
