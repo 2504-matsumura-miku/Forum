@@ -11,6 +11,9 @@
 </div>
 <div class="main-contents">
   <form method="post" th:action="@{/update}" th:object="${formModel}">
+    <div class="errorMessage">
+      <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+    </div>
     <div class="form-area">
       <label>投稿内容</label>
       <textarea class="tweet-box" th:field="*{content}" size="20" maxlength="200" /></textarea><br/>

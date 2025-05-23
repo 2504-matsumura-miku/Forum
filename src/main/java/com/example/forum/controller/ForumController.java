@@ -5,8 +5,11 @@ import com.example.forum.controller.form.ReportForm;
 import com.example.forum.repository.entity.Comment;
 import com.example.forum.service.CommentService;
 import com.example.forum.service.ReportService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -22,7 +25,7 @@ public class ForumController {
     /*
      * 投稿・コメント内容表示処理
      */
-    @GetMapping() //トップページ表示のためURLなし
+    @GetMapping("/") //トップページ表示のためURLなし
     public ModelAndView top() {
         ModelAndView mav = new ModelAndView();
         // 投稿を全件取得
@@ -34,7 +37,7 @@ public class ForumController {
         // 投稿データオブジェクトを保管
         mav.addObject("contents", contentData);
         mav.addObject("comments", commentData);
-        // mav.addObject("commentForm", new CommentForm());
+        mav.addObject("formModel", new CommentForm());
         return mav;
     }
 
@@ -57,7 +60,16 @@ public class ForumController {
      * 新規投稿処理
      */
     @PostMapping("/add")
-    public ModelAndView addContent(@ModelAttribute("formModel") ReportForm reportForm) {
+    // リクエストのデータが複数(textとmessage_id)あり、それらを1つのFormオブジェクトで扱うので@ModelAttribute
+    // @Validatedで入力チェックが実行、BindingResultにはFormの入力値検証で引っかかったvalidation結果が格納
+    public ModelAndView addContent(@Valid @ModelAttribute("formModel") ReportForm reportForm,
+                                   BindingResult result) {
+        // 投稿内容が未入力の場合はエラーメッセージを表示
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("/new");
+            mav.addObject("formModel", reportForm);
+            return mav;
+        }
         // 投稿をテーブルに格納
         reportService.saveReport(reportForm);
         // rootへリダイレクト
@@ -95,7 +107,14 @@ public class ForumController {
      * 投稿編集処理
      */
     @PostMapping("/update")
-    public ModelAndView updateContent(@ModelAttribute("formModel") ReportForm reportForm) {
+    public ModelAndView updateContent(@Valid @ModelAttribute("formModel") ReportForm reportForm,
+                                      BindingResult result) {
+        // 投稿内容が未入力の場合はエラーメッセージを表示
+        if (result.hasErrors()) {
+            ModelAndView mav = new ModelAndView("/edit");
+            mav.addObject("formModel", reportForm);
+            return mav;
+        }
         // 編集した投稿を更新
         reportService.saveReport(reportForm);
         // トップ画面へリダイレクト
@@ -106,8 +125,14 @@ public class ForumController {
      * コメント投稿処理
      */
     @PostMapping("/comAdd")
-    // リクエストのデータが複数(textとmessage_id)あり、それらを1つのFormオブジェクトで扱うので@ModelAttribute
-    public ModelAndView addComment(@ModelAttribute("formModel") CommentForm commentForm) {
+    public ModelAndView addComment(@Validated @ModelAttribute("formModel") CommentForm commentForm,
+                                   BindingResult result) {
+        // 投稿内容が未入力の場合はエラーメッセージを表示
+        if (result.hasErrors()) {
+            ModelAndView mav = top();
+            mav.addObject("formModel", commentForm);
+            return mav;
+        }
         // 投稿をテーブルに格納
         commentService.saveComment(commentForm);
         // rootへリダイレクト

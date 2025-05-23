@@ -45,7 +45,11 @@
             </form>
         </div><p>
         <div class="comment-area">
-            <form th:action="@{/comAdd}" method="post">
+            <form th:action="@{/comAdd}" method="post" th:object="${formModel}">
+                <!-- 未入力チェック -->
+                <div class="errorMessage">
+                    <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></div>
+                </div>
                 <!-- CommentForm.setText()に対応 -->
                 <textarea class="tweet-box" name="text" maxlength="150"></textarea><br/>
                 <!-- CommentForm.setMessage_id() に対応 -->
